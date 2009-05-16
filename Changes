@@ -1,0 +1,10 @@
+Revision history for CLI-Dispatch
+
+0.03 2009/05/16
+  - better error handling (not to show pod with an unexpected error)
+
+0.02 2008/11/17
+  - explicitly camelize the first argument for 'Help' command
+
+0.01 2008/11/17
+  - initial release
