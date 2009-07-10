@@ -77,26 +77,32 @@ sub list_commands {
     foreach my $path ( @paths ) {
       my $dir = dir( $inc, $path );
       next unless $dir->exists;
-      my @files = $dir->find(qr/.+\.(?:pm|pod)$/);
-      foreach my $file ( @files ) {
+      $dir->recurse( callback => sub {
+        my $file = shift;
+        return if $file->is_dir;
+
         my $basename = $file->basename;
-        $basename =~ s/\.(?:pm|pod)$//;
-        next if defined $found{$basename};
+           $basename =~ s/\.(?:pm|pod)$//;
+
+        return if defined $found{$basename};
 
         (my $class = $path) =~ s{/}{::}g;
         $class .= '::'.$basename;
 
         # ignore base class
-        next if $class eq 'CLI::Dispatch::Command';
+        return if $class eq 'CLI::Dispatch::Command';
 
-        my $pod = $self->_parse_pod($file);
+        # should always parse .pod file if it exists
+        my $podfile = $file->parent->file($basename . '.pod');
+
+        my $pod = $self->_parse_pod($podfile->exists ? $podfile : $file);
 
         $basename = $self->convert_command($basename);
 
         $found{$basename} = $self->extract_brief_description($pod, $class);
         my $len = length $basename;
         $maxlength = $len if $maxlength < $len;
-      }
+      });
     }
   }
 
