@@ -56,7 +56,7 @@ sub _command_list {
   );
 
   foreach my $key ( keys %map ) {
-    ok $ret =~ /$map{$key}/, $class->message("has $key");
+    like $ret => qr/$map{$key}/, $class->message("has $key");
   }
 }
 
