@@ -1,5 +1,8 @@
 Revision history for CLI-Dispatch
 
+0.04 2009/07/10
+  - should always parse .pod file if it exists (tokuhirom++)
+
 0.03 2009/05/16
   - better error handling (not to show pod with an unexpected error)
 
