@@ -104,6 +104,24 @@ If you want to dump to a file, pass the file name to C<logfile>, and if you want
 
 See L<Log::Dump> for detailed instrution.
 
+=head2 check (since 0.05)
+
+will be executed before C<run>, mainly to see if the command is really available for the user. If the command happens to die there, the dying message will also be shown in the commands list.
+
+    package MyScript::UnportableCommand;
+
+    use strict;
+    use base 'CLI::Dispatch::Command';
+
+    sub check {
+      my $self = shift;
+
+      eval "require Module::For::Unix::Only";
+      die "Unsupported OS" if $@;  # for a better message in the list
+    }
+
+    sub run { ... }
+
 =head2 new
 
 creates a command object.

@@ -1,9 +1,9 @@
-package CLIDTestClass::Error::Help;
+package CLIDTestClass::Check::Help;
 
 use strict;
 use warnings;
 use Test::Classy::Base;
-use CLIDTest::Error;
+use CLI::Dispatch;
 use File::Spec;
 
 sub list : Tests(5) {
@@ -50,9 +50,9 @@ sub _command_list {
   my %map = (
     help    => 'help\s+-',
     install => 'install\s+- how to install',
-    simple  => 'simple\s+- alternative text for simple command \[disabled: compile error\]',
-    args    => 'with_args\s+- args test \[disabled: compile error\]',
-    options => 'with_options\s+- option test \[disabled: compile error\]',
+    simple  => 'simple\s+- alternative text for simple command \[disabled: for some reasons\]',
+    args    => 'with_args\s+- args test \[disabled: for some reasons\]',
+    options => 'with_options\s+- option test \[disabled: for some reasons\]',
   );
 
   foreach my $key ( keys %map ) {
@@ -78,7 +78,7 @@ sub dispatch {
   my $stdout = select($null);
 
   my $ret;
-  eval { $ret = CLIDTest::Error->run };
+  eval { $ret = CLI::Dispatch->run('CLIDTest::Check') };
 
   select($stdout);
 

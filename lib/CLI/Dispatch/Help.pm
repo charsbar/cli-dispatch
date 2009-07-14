@@ -3,6 +3,7 @@ package CLI::Dispatch::Help;
 use strict;
 use warnings;
 use base qw( CLI::Dispatch::Command );
+use Class::Unload;
 use Encode;
 use Pod::Simple::Text;
 use Path::Extended;
@@ -92,14 +93,33 @@ sub list_commands {
         # ignore base class
         return if $class eq 'CLI::Dispatch::Command';
 
-        # should always parse .pod file if it exists
         my $podfile = $file->parent->file($basename . '.pod');
+        my $pmfile  = $file->parent->file($basename . '.pm');
 
+        # should always parse .pod file if it exists
         my $pod = $self->_parse_pod($podfile->exists ? $podfile : $file);
 
         $basename = $self->convert_command($basename);
 
         $found{$basename} = $self->extract_brief_description($pod, $class);
+
+        # check availability
+        if ( $pmfile->exists ) {
+          Class::Unload->unload($class);
+          eval "require $class";
+          if ($@) {
+            $found{$basename} .= " [disabled: compile error]";
+          }
+          elsif ( $class->can('check') ) {
+            eval { $class->check };
+            if ($@) {
+              my $error = $@;
+              $error =~ s/\s+at .+? line \d+\.?\s*$//;
+              $found{$basename} .= " [disabled: $error]";
+            }
+          }
+        }
+
         my $len = length $basename;
         $maxlength = $len if $maxlength < $len;
       });

@@ -8,6 +8,7 @@ WriteMakefile(
   VERSION_FROM  => 'lib/CLI/Dispatch.pm',
   ABSTRACT_FROM => 'lib/CLI/Dispatch.pm',
   PREREQ_PM => {
+    'Class::Unload'       => 0,
     'Encode'              => 0,
     'File::Spec'          => 0,
     'Getopt::Long'        => 0,

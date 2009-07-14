@@ -10,11 +10,17 @@ t/10_basic.t
 t/20_more.t
 t/30_single.t
 t/40_error.t
+t/50_check.t
 t/99_pod.t
 t/99_podcoverage.t
 t/lib/CLIDTest/Basic/Simple.pm
 t/lib/CLIDTest/Basic/WithArgs.pm
 t/lib/CLIDTest/Basic/WithOptions.pm
+t/lib/CLIDTest/Check/Help.pm
+t/lib/CLIDTest/Check/Simple.pm
+t/lib/CLIDTest/Check/Simple.pod
+t/lib/CLIDTest/Check/WithArgs.pm
+t/lib/CLIDTest/Check/WithOptions.pm
 t/lib/CLIDTest/Error.pm
 t/lib/CLIDTest/Error/Help.pm
 t/lib/CLIDTest/Error/Simple.pm
@@ -32,6 +38,8 @@ t/lib/CLIDTest/Single.pm
 t/lib/CLIDTest/Single/DumpMe.pm
 t/lib/CLIDTestClass/Basic/Basic.pm
 t/lib/CLIDTestClass/Basic/Help.pm
+t/lib/CLIDTestClass/Check/Basic.pm
+t/lib/CLIDTestClass/Check/Help.pm
 t/lib/CLIDTestClass/Error/Basic.pm
 t/lib/CLIDTestClass/Error/Help.pm
 t/lib/CLIDTestClass/More/Basic.pm

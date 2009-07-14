@@ -110,6 +110,8 @@ sub run {
     $ARGV[0] = $class->convert_command($ARGV[0]);
   }
 
+  $command->check if $command->can('check');
+
   $command->run(@ARGV);
 }
 
