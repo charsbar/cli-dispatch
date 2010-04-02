@@ -43,15 +43,15 @@ sub output {
 sub extract_pod {
   my ($self, $command) = @_;
 
-  my $found = $self->_lookup( $command );
+  my $content = $self->_lookup( $command );
 
-  unless ( $found ) {
+  unless ( $content ) {
     $self->logger(1) unless $self->logger;
     $self->log( warn => "$command is not found" );
     return $self->list_commands;
   }
 
-  my $pod = $self->_parse_pod($found);
+  my $pod = $self->_parse_pod($content);
 
   return $self->extract_pod_body($pod);
 }
@@ -97,7 +97,7 @@ sub list_commands {
         my $pmfile  = $file->parent->file($basename . '.pm');
 
         # should always parse .pod file if it exists
-        my $pod = $self->_parse_pod($podfile->exists ? $podfile : $file);
+        my $pod = $self->_parse_pod(scalar ($podfile->exists ? $podfile->slurp : $file->slurp));
 
         $basename = $self->convert_command($basename);
 
@@ -153,7 +153,7 @@ sub _parse_pod {
 
   my $parser = Pod::Simple::Text->new;
      $parser->output_string( \my $pod );
-     $parser->parse_file("$file");
+     $parser->parse_string_document("$file");
 
   return $pod;
 }
@@ -177,7 +177,7 @@ sub _lookup {
     foreach my $path ( @paths ) {
       foreach my $ext (qw( pod pm )) {
         my $file = file( $inc, "$path.$ext" );
-        return $file if $file->exists;
+        return scalar $file->slurp if $file->exists;
       }
     }
   }
