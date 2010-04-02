@@ -72,6 +72,8 @@ sub _load_command {
   my ($class, $namespace, $command) = @_;
 
   my $package = $namespace.'::'.$command;
+  return $package->new if $package->can('new');
+
   eval "require $package";
   return $package->new unless $@;
 
@@ -206,6 +208,26 @@ CLI::Dispatch - simple CLI dispatcher
     > perl script.pl escape "query=some string!?" --uri
 
     # will print a uri-escaped string
+
+  * Lazy way
+
+  In your script file (e.g. script.pl):
+
+    use strict;
+    use CLI::Dispatch;
+    CLI::Dispatch->run('MyScript');
+
+    package MyScript::Inline;
+    use base 'CLI::Dispatch::Command';
+    sub run {
+      my ($self, @args) = @_;
+
+      # do something...
+    }
+
+  From the shell:
+
+    > perl script.pl inline
 
 =head1 DESCRIPTION
 
