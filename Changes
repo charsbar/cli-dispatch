@@ -1,5 +1,8 @@
 Revision history for CLI-Dispatch
 
+0.06 2010/04/02
+  - support inline packages to pack everything in a script file
+
 0.05 2009/07/15
   - Now you can add a "check" method to a command to see if it is
     really available for a user (if the command dies there due to
