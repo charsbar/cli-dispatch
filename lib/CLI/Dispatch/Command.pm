@@ -76,7 +76,12 @@ CLI::Dispatch::Command
 
 =head1 DESCRIPTION
 
-L<CLI::Dispatch::Command> is a base class for an actual command. Basically, all you need to do is override the C<run> method to let it do what you want, and optionally override the C<options> method to provide option specifications for the command. Also, you are expected to write a decent pod for the command, which will be shown when you run a script with C<help> option/command, or when you run it without any command.
+L<CLI::Dispatch::Command> is a base class for an actual command. Basically, all
+you need to do is override the C<run> method to let it do what you want, and
+optionally override the C<options> method to provide option specifications for
+the command. Also, you are expected to write a decent pod for the command,
+which will be shown when you run a script with C<help> option/command, or when
+you run it without any command.
 
 =head1 METHODS
 
@@ -86,27 +91,35 @@ this is where you are expected to write what you want the command to do.
 
 =head2 options
 
-this is where you are expected to write an array of command-specific option specifications.
+this is where you are expected to write an array of command-specific option
+specifications.
 
 =head2 option
 
-is a read-only accessor to the option of the name (returns an empty string if the option is not defined).
+is a read-only accessor to the option of the name (returns an empty string if
+the option is not defined).
 
 =head2 log, logger, logfile, logfilter
 
-L<CLI::Dispatch> uses L<Log::Dump> as a logger, and the logger is enabled when the C<verbose> option is set.
+L<CLI::Dispatch> uses L<Log::Dump> as a logger, and the logger is enabled when
+the C<verbose> option is set.
 
-C<log> takes a label and arbitrary messages (strings, references and objects), and dumps them to stderr by default.
+C<log> takes a label and arbitrary messages (strings, references and objects),
+and dumps them to stderr by default.
 
   $self->log( label => @messages );
 
-If you want to dump to a file, pass the file name to C<logfile>, and if you want to dump only messages with selected labels, use C<logfilter>. If you want to use other loggers like L<Log::Dispatch>, pass its instance to C<logger>.
+If you want to dump to a file, pass the file name to C<logfile>, and if you
+want to dump only messages with selected labels, use C<logfilter>. If you want
+to use other loggers like L<Log::Dispatch>, pass its instance to C<logger>.
 
 See L<Log::Dump> for detailed instrution.
 
 =head2 check (since 0.05)
 
-will be executed before C<run>, mainly to see if the command is really available for the user. If the command happens to die there, the dying message will also be shown in the commands list.
+will be executed before C<run>, mainly to see if the command is really
+available for the user. If the command happens to die there, the dying message
+will also be shown in the commands list.
 
     package MyScript::UnportableCommand;
 
@@ -128,7 +141,8 @@ creates a command object.
 
 =head2 set_options
 
-takes a hash of options from the dispatcher, and set them into the command object.
+takes a hash of options from the dispatcher, and set them into the command
+object.
 
 =head1 AUTHOR
 
@@ -138,7 +152,7 @@ Kenichi Ishigaki, E<lt>ishigaki@cpan.orgE<gt>
 
 Copyright (C) 2008 by Kenichi Ishigaki.
 
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
 
 =cut

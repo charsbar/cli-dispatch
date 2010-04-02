@@ -208,15 +208,20 @@ CLI::Dispatch::Help - show help
 
 =head1 DESCRIPTION
 
-This command is used to show help, and expects the first section of the pod of each command to be a NAME (or equivalent) section with a class name and brief description of the class/command, separated by a hyphen and arbitrary numbers of white spaces (like this pod).
+This command is used to show help, and expects the first section of the pod of
+each command to be a NAME (or equivalent) section with a class name and brief
+description of the class/command, separated by a hyphen and arbitrary numbers
+of white spaces (like this pod).
 
-If you distribute your script, you may want to make a subclass of this command just to provide more user-friendly document (content-wise and language-wise).
+If you distribute your script, you may want to make a subclass of this command
+just to provide more user-friendly document (content-wise and language-wise).
 
 =head1 METHODS
 
 =head2 run
 
-shows a list of available commands (with brief description if any), or help (pod) of a specific command.
+shows a list of available commands (with brief description if any), or help
+(pod) of a specific command.
 
 =head2 options
 
@@ -224,7 +229,10 @@ by default, encode/decode options are available to change encoding.
 
 =head2 extra_namespaces
 
-by default, this command looks for commands just under the namespace you specified in the script/dispatcher. However, you may want it to look into other directories to show something like tutorials. For example, if you make a subclass like this:
+by default, this command looks for commands just under the namespace you
+specified in the script/dispatcher. However, you may want it to look into other
+directories to show something like tutorials. For example, if you make a
+subclass like this:
 
   package MyScript::Help;
   use strict;
@@ -233,7 +241,8 @@ by default, this command looks for commands just under the namespace you specifi
   sub extra_namespaces { qw( MyScript::Cookbook ) }
   1;
 
-then, when you run the script like this, MyScript/Cookbook/Install.pod (or .pm) will be shown:
+then, when you run the script like this, MyScript/Cookbook/Install.pod (or .pm)
+will be shown:
 
   > perl myscript.pl help install
 
@@ -254,31 +263,40 @@ You may even make it language-conscious:
     );
   1;
 
-This can be used to provide more user-friendly documents (without overriding commands themselves).
+This can be used to provide more user-friendly documents (without overriding
+commands themselves).
 
 =head2 output
 
-by default, takes a text, decode/encode it if necessary, prints the result to stdout, and returns the text.
+by default, takes a text, decode/encode it if necessary, prints the result to
+stdout, and returns the text.
 
 =head2 extract_pod
 
-takes a command and looks for the actual pm/pod file to read its pod, and returns the pod (without the first section to hide the class name and brief description).
+takes a command and looks for the actual pm/pod file to read its pod, and
+returns the pod (without the first section to hide the class name and brief
+description).
 
 =head2 extract_pod_body
 
-takes a pod, removes the first ("NAME") section, and returns the pod. You may also want to hide other sections like "AUTHOR" and "COPYRIGHT" for end users.
+takes a pod, removes the first ("NAME") section, and returns the pod. You may
+also want to hide other sections like "AUTHOR" and "COPYRIGHT" for end users.
 
 =head2 list_commands
 
-returns a concatenated text of a list of the available commands with brief description (if any).
+returns a concatenated text of a list of the available commands with brief
+description (if any).
 
 =head2 convert_command
 
-takes a name of a command, converts it if necessary (decamelize by default), and returns the result.
+takes a name of a command, converts it if necessary (decamelize by default),
+and returns the result.
 
 =head2 extract_brief_description
 
-takes a pod, extract the first ("NAME") section (actually the first line of the first section), and returns it. Override this if you don't want to cut longer (multi-lined) description.
+takes a pod, extract the first ("NAME") section (actually the first line of the
+first section), and returns it. Override this if you don't want to cut longer
+(multi-lined) description.
 
 =head1 AUTHOR
 
@@ -288,7 +306,7 @@ Kenichi Ishigaki, E<lt>ishigaki@cpan.orgE<gt>
 
 Copyright (C) 2008 by Kenichi Ishigaki.
 
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
 
 =cut

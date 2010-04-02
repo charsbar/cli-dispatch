@@ -231,7 +231,13 @@ CLI::Dispatch - simple CLI dispatcher
 
 =head1 DESCRIPTION
 
-L<CLI::Dispatch> is a simple CLI dispatcher. Basic usage is almost the same as the one of L<App::CLI>, but you can omit a dispatcher class if you don't need to customize. Command/class mapping is slightly different, too (ucfirst for L<App::CLI>, and camelize for L<CLI::Dispatch>). And unlike L<App::Cmd>, L<CLI::Dispatch> dispatcher works even when some of the subordinate commands are broken for various reasons (unsupported OS, lack of dependencies, etc). Those are the main reasons why I reinvent the wheel.
+L<CLI::Dispatch> is a simple CLI dispatcher. Basic usage is almost the same as
+the one of L<App::CLI>, but you can omit a dispatcher class if you don't need
+to customize. Command/class mapping is slightly different, too (ucfirst for
+L<App::CLI>, and camelize for L<CLI::Dispatch>). And unlike L<App::Cmd>,
+L<CLI::Dispatch> dispatcher works even when some of the subordinate commands
+are broken for various reasons (unsupported OS, lack of dependencies, etc).
+Those are the main reasons why I reinvent the wheel.
 
 See L<CLI::Dispatch::Command> to know how to write an actual command class.
 
@@ -239,37 +245,49 @@ See L<CLI::Dispatch::Command> to know how to write an actual command class.
 
 =head2 run
 
-takes an optional namespace, and parses @ARGV to load an appropriate command class, and run it with options that are also parsed from @ARGV. As shown in the SYNOPSIS, you don't need to pass anything when you create a dispatcher subclass, and vice versa.
+takes an optional namespace, and parses @ARGV to load an appropriate command
+class, and run it with options that are also parsed from @ARGV. As shown in the
+SYNOPSIS, you don't need to pass anything when you create a dispatcher
+subclass, and vice versa.
 
 =head2 options
 
-specifies an array of global options every command should have. By default, C<help> and C<verbose> (and their short forms) are registered. Command-specific options should be placed in each command class.
+specifies an array of global options every command should have. By default,
+C<help> and C<verbose> (and their short forms) are registered. Command-specific
+options should be placed in each command class.
 
 =head2 default_command
 
-specifies a default command that will run when you don't specify any command (when you run a script without any arguments). C<help> by default.
+specifies a default command that will run when you don't specify any command
+(when you run a script without any arguments). C<help> by default.
 
 =head2 get_command
 
-usually looks for a command from @ARGV (after global options are parsed), transforms it if necessary (camelize by default), and returns the result.
+usually looks for a command from @ARGV (after global options are parsed),
+transforms it if necessary (camelize by default), and returns the result.
 
-If you have only one command, and you don't want to specify it every time when you run a script, let this just return the command:
+If you have only one command, and you don't want to specify it every time when
+you run a script, let this just return the command:
 
   sub get_command { 'JustDoThis' }
 
-Then, when you run the script, C<YourScript::JustDoThis> command will always be executed (and the first argument won't be considered as a command).
+Then, when you run the script, C<YourScript::JustDoThis> command will always be
+executed (and the first argument won't be considered as a command).
 
 =head2 convert_command
 
-takes a command name, transforms it if necessary (camelize by default), and returns the result.
+takes a command name, transforms it if necessary (camelize by default), and
+returns the result.
 
 =head2 get_options
 
-takes an array of option specifications and returns a hash of parsed options. See L<Getopt::Long> for option specifications.
+takes an array of option specifications and returns a hash of parsed options.
+See L<Getopt::Long> for option specifications.
 
 =head2 load_command
 
-takes a namespace, and a flag to tell if the C<help> option is set or not, and loads an appropriate command class to return its instance.
+takes a namespace, and a flag to tell if the C<help> option is set or not, and
+loads an appropriate command class to return its instance.
 
 =head1 SEE ALSO
 
@@ -283,7 +301,7 @@ Kenichi Ishigaki, E<lt>ishigaki@cpan.orgE<gt>
 
 Copyright (C) 2008 by Kenichi Ishigaki.
 
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
 
 =cut
