@@ -33,6 +33,26 @@ sub run {
   return;
 }
 
+sub usage {
+  my ($self, $no_print) = @_;
+
+  my $class = ref $self;
+  $class =~ s{::}{/}g;
+  $class .= '.pm';
+
+  my $file = $INC{$class} || $0 or return;
+  my $content = do { local $/; open my $fh, '<', $file; <$fh> };
+
+  require CLI::Dispatch::Help;
+  my $help = CLI::Dispatch::Help->new(%$self);
+
+  my $pod = $help->_parse_pod($content);
+  $pod = $help->extract_pod_body($pod);
+
+  $pod =~ /^(\S+\s+.+?)\n(?=\S)/s; # extract first paragraph
+  $help->output( $1 || '', $no_print );
+}
+
 1;
 
 __END__
@@ -53,6 +73,8 @@ CLI::Dispatch::Command
 
     sub run {
       my ($self, @args) = @_;
+
+      die $self->usage(1) unless @args;
 
       # this message will be printed when "verbose" option is set
       $self->log( debug => 'going to convert encoding' );
@@ -134,6 +156,10 @@ will also be shown in the commands list.
     }
 
     sub run { ... }
+
+=head2 usage (since 0.07)
+
+will print the first section of the pod for the command. If you pass a true value as the first argument, it just returns the usage text instead without printing.
 
 =head2 new
 

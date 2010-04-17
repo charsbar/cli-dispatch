@@ -8,6 +8,9 @@ use Encode;
 use Pod::Simple::Text;
 use Path::Extended;
 use String::CamelCase;
+use Term::Encoding ();
+
+my $term_encoding = Term::Encoding::get_encoding();
 
 sub options {qw( from|decode=s to|encode=s )}
 
@@ -28,14 +31,14 @@ sub run {
 }
 
 sub output {
-  my ($self, $text) = @_;
+  my ($self, $text, $no_print) = @_;
 
   unless ( Encode::is_utf8( $text ) ) {
     $text = decode( $self->option('from') || 'utf8', $text )
   }
-  $text = encode( $self->option('to') || 'utf8', $text );
+  $text = encode( $self->option('to') || $term_encoding, $text );
 
-  print $text;
+  print $text unless $no_print;
 
   return $text;
 }

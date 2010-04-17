@@ -16,6 +16,7 @@ WriteMakefile(
     'Path::Extended'      => 0,
     'Pod::Simple'         => 0,
     'String::CamelCase'   => 0,
+    'Term::Encoding'      => 0,
     'Test::Classy'        => '0.04',
     'Test::More'          => '0.47',
     'Test::UseAllModules' => '0.09',

@@ -6,7 +6,7 @@ use Carp;
 use Getopt::Long ();
 use String::CamelCase;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 # you may want to override these three methods.
 
