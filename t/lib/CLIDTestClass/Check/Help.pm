@@ -73,6 +73,7 @@ sub dispatch {
   my $class = shift;
 
   local @ARGV = @_;
+  local $SIG{__WARN__} = sub {};
 
   open my $null, '>', File::Spec->devnull;
   my $stdout = select($null);
