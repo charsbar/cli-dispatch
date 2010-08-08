@@ -164,9 +164,10 @@ sub _parse_pod {
 sub _namespaces {
   my $self = shift;
 
-  return (
+  my %seen;
+  return grep { !$seen{$_}++ } (
     $self->extra_namespaces,
-    $self->option('_namespace'),
+    @{ $self->option('_namespaces') || [] },
     'CLI::Dispatch'
   );
 }
