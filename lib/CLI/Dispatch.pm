@@ -280,7 +280,13 @@ executed (and the first argument won't be considered as a command).
 =head2 convert_command
 
 takes a command name, transforms it if necessary (camelize by default), and
-returns the result.
+returns the result. You may also want to override this to convert short aliases
+for long command names.
+
+  sub convert_command {
+    my $command = shift->SUPER::convert_command(@_);
+    return ($command eq 'Fcgi') ? 'FastCGI' : $command;
+  }
 
 =head2 get_options
 
