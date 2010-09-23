@@ -13,6 +13,7 @@ t/40_error.t
 t/50_check.t
 t/60_inline.t
 t/70_multi.t
+t/80_directly.t
 t/99_pod.t
 t/99_podcoverage.t
 t/lib/CLIDTest/Basic/Simple.pm
@@ -43,6 +44,8 @@ t/lib/CLIDTestClass/Basic/Basic.pm
 t/lib/CLIDTestClass/Basic/Help.pm
 t/lib/CLIDTestClass/Check/Basic.pm
 t/lib/CLIDTestClass/Check/Help.pm
+t/lib/CLIDTestClass/Directly/Basic.pm
+t/lib/CLIDTestClass/Directly/Help.pm
 t/lib/CLIDTestClass/Error/Basic.pm
 t/lib/CLIDTestClass/Error/Help.pm
 t/lib/CLIDTestClass/Inline/Basic.pm

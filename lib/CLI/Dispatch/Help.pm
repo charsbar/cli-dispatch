@@ -175,7 +175,14 @@ sub _namespaces {
 sub _lookup {
   my ($self, $command) = @_;
 
-  my @paths = map { s{::}{/}g; "$_/$command" } $self->_namespaces;
+  my @paths;
+  if ($command =~ s/^\+//) {
+    $command =~ s{::}{/}g;
+    @paths = $command;
+  }
+  else {
+    @paths = map { s{::}{/}g; "$_/$command" } $self->_namespaces;
+  }
 
   foreach my $inc ( @INC ) {
     foreach my $path ( @paths ) {
@@ -185,6 +192,22 @@ sub _lookup {
       }
     }
   }
+
+  # probably it's embedded in the caller...
+  my $ct = 0;
+  my %seen;
+  while (my @caller = caller($ct++)) {
+    next if $caller[0] =~ /^CLI::Dispatch(::.+)?$/;
+    next if $seen{$caller[0]}++;
+    my $content = scalar file($caller[1])->slurp;
+    for my $path ( @paths ) {
+      (my $package = $path) =~ s{/}{::}g;
+      if ($content =~ /=head1\s+\S+\s+$package/s) { # hopefully NAME
+        return $content;
+      }
+    }
+  }
+
   return;
 }
 

@@ -33,6 +33,13 @@ sub run {
   return;
 }
 
+sub run_directly {
+  my $self = shift;
+  my $class = ref $self || $self;
+  require CLI::Dispatch;
+  CLI::Dispatch->run_directly($class);
+}
+
 sub usage {
   my ($self, $no_print) = @_;
 
@@ -160,6 +167,10 @@ will also be shown in the commands list.
 =head2 usage (since 0.07)
 
 will print the first section of the pod for the command. If you pass a true value as the first argument, it just returns the usage text instead without printing.
+
+=head2 run_directly (since 0.09)
+
+loads L<CLI::Dispatch> to dispatch directly back to the command. This is handy if you prefer writing a set of independent scripts to writing one dispatcher script. 
 
 =head2 new
 

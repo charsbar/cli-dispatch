@@ -6,7 +6,7 @@ use Carp;
 use Getopt::Long ();
 use String::CamelCase;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 # you may want to override these three methods.
 
@@ -120,6 +120,30 @@ sub run {
   $command->run(@ARGV);
 }
 
+sub run_directly {
+  my ($class, $package) = @_;
+
+  unless ($package->can('new')) {
+    eval "require $package";
+    croak $@ if $@;
+  }
+
+  my %global  = $class->get_options( $class->options );
+  my $command = $package->new;
+  if ($global{help}) {
+    require CLI::Dispatch::Help;
+    $command = CLI::Dispatch::Help->new;
+    unshift @ARGV, "+$package";
+  }
+  my %local   = $class->get_options( $command->options );
+
+  $command->set_options( %global, %local );
+
+  $command->check if $command->can('check');
+
+  $command->run(@ARGV);
+}
+
 1;
 
 __END__
@@ -214,11 +238,10 @@ CLI::Dispatch - simple CLI dispatcher
 
   * Lazy way
 
-  In your script file (e.g. script.pl):
+  In your script file (e.g. inline.pl):
 
     use strict;
-    use CLI::Dispatch;
-    CLI::Dispatch->run('MyScript');
+    MyScript::Inline->run_directly;
 
     package MyScript::Inline;
     use base 'CLI::Dispatch::Command';
@@ -230,7 +253,7 @@ CLI::Dispatch - simple CLI dispatcher
 
   From the shell:
 
-    > perl script.pl inline
+    > perl inline.pl -v
 
 =head1 DESCRIPTION
 
@@ -249,7 +272,7 @@ See L<CLI::Dispatch::Command> to know how to write an actual command class.
 =head2 run
 
 takes optional namespaces, and parses @ARGV to load an appropriate command
-class, and run it with options that are also parsed from @ARGV. As shown in the
+class, and runs it with options that are also parsed from @ARGV. As shown in the
 SYNOPSIS, you don't need to pass anything when you create a dispatcher
 subclass, and vice versa.
 
@@ -297,6 +320,14 @@ See L<Getopt::Long> for option specifications.
 
 takes a namespace, and a flag to tell if the C<help> option is set or not, and
 loads an appropriate command class to return its instance.
+
+=head2 run_directly
+
+takes a fully qualified package name, and loads it if necessary, and run it with
+options parsed from @ARGV. This is mainly used to run a command directly (without
+configuring a dispatcher), which makes writing a simple command easier. You usually
+don't need to use this directly. This is called internally when you run a command
+(based on L<CLI::Dispatch::Command>) directly, without instantiation.
 
 =head1 SEE ALSO
 
