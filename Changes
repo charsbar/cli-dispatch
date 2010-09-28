@@ -1,5 +1,9 @@
 Revision history for CLI-Dispatch
 
+0.10 2010/09/29
+  - no code changes
+  - added Try::Tiny dependency, hoping to catch test errors correctly
+
 0.09 2010/09/23
   - added run_directly method, which would be handy if you prefer
     writing a set of independent scripts to writing one dispatcher
