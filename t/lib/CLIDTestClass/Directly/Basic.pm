@@ -3,6 +3,7 @@ package CLIDTestClass::Directly::Basic;
 use strict;
 use warnings;
 use Test::Classy::Base;
+use Try::Tiny;
 
 sub no_args : Test {
   my $class = shift;
@@ -34,9 +35,10 @@ sub dispatch {
   local @ARGV = @_;
 
   my $ret;
-  eval { $ret = CLIDTest::Directly::DumpMe->run_directly };
+  try   { $ret = CLIDTest::Directly::DumpMe->run_directly }
+  catch { $ret = $_ || 'Obscure error' };
 
-  return $@ ? $@ : $ret;
+  return $ret;
 }
 
 no warnings 'redefine';

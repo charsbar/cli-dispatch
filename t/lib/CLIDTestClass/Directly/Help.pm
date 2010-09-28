@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Test::Classy::Base;
 use File::Spec;
+use Try::Tiny;
 
 sub help_command : Test {
   my $class = shift;
@@ -31,11 +32,12 @@ sub dispatch {
   my $stdout = select($null);
 
   my $ret;
-  eval { $ret = CLIDTest::Directly::HelpMe->run_directly };
+  try   { $ret = CLIDTest::Directly::HelpMe->run_directly }
+  catch { $ret = $_ || 'Obscure error' };
 
   select($stdout);
 
-  return $@ ? $@ : $ret;
+  return $ret;
 }
 
 no warnings 'redefine';

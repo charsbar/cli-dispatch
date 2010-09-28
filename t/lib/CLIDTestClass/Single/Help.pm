@@ -5,6 +5,7 @@ use warnings;
 use Test::Classy::Base;
 use CLIDTest::Single;
 use File::Spec;
+use Try::Tiny;
 
 sub help_command : Test {
   my $class = shift;
@@ -32,11 +33,12 @@ sub dispatch {
   my $stdout = select($null);
 
   my $ret;
-  eval { $ret = CLIDTest::Single->run };
+  try   { $ret = CLIDTest::Single->run }
+  catch { $ret = $_ || 'Obscure error' };
 
   select($stdout);
 
-  return $@ ? $@ : $ret;
+  return $ret;
 }
 
 1;

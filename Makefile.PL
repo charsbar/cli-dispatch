@@ -20,6 +20,7 @@ WriteMakefile(
     'Test::Classy'        => '0.04',
     'Test::More'          => '0.47',
     'Test::UseAllModules' => '0.09',
+    'Try::Tiny'           => 0,
   },
   ($ExtUtils::MakeMaker::VERSION >= 6.31
     ? ( LICENSE => 'perl' )

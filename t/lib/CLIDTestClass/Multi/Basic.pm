@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Test::Classy::Base;
 use CLI::Dispatch;
+use Try::Tiny;
 
 sub simple_dispatch : Test {
   my $class = shift;
@@ -59,9 +60,10 @@ sub dispatch {
   local @ARGV = @_;
 
   my $ret;
-  eval { $ret = CLI::Dispatch->run(qw/CLIDTest::More CLIDTest::Single/) };
+  try   { $ret = CLI::Dispatch->run(qw/CLIDTest::More CLIDTest::Single/) }
+  catch { $ret = $_ || 'Obscure error' };
 
-  return $@ ? $@ : $ret;
+  return $ret;
 }
 
 1;
