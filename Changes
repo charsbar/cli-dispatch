@@ -1,5 +1,9 @@
 Revision history for CLI-Dispatch
 
+0.11_02 2010/10/02
+  - make sure classes are unloaded after their availability are
+    confirmed (except those that are loaded before the check)
+
 0.11_01 2010/10/02
   - use more Try::Tiny
 

@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base qw( CLI::Dispatch::Command );
 use Class::Unload;
+use Class::Inspector;
 use Encode;
 use Pod::Simple::Text;
 use Path::Extended;
@@ -109,7 +110,8 @@ sub list_commands {
 
         # check availability
         if ( $pmfile->exists ) {
-          Class::Unload->unload($class);
+          my $loaded = Class::Inspector->loaded($class);
+          Class::Unload->unload($class) if $loaded;
           my $error;
           try   { eval "require $class" or die }
           catch { $error = $_ || 'Obscure error' };
@@ -124,6 +126,7 @@ sub list_commands {
               $found{$basename} .= " [disabled: $error]";
             };
           }
+          Class::Unload->unload($class) unless $loaded;
         }
 
         my $len = length $basename;
