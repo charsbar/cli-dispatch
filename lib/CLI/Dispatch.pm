@@ -5,8 +5,9 @@ use warnings;
 use Carp;
 use Getopt::Long ();
 use String::CamelCase;
+use Try::Tiny;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11_01';
 
 # you may want to override these three methods.
 
@@ -75,12 +76,14 @@ sub _load_command {
     my $package = $namespace.'::'.$command;
     return $package->new if $package->can('new');
 
-    eval "require $package";
-    return $package->new unless $@;
+    my $error;
+    try   { eval "require $package" or die }
+    catch { $error = $_ || 'Obscure error' };
+    return $package->new unless $error;
 
     my $file = _package_file($package);
-    next if $@ =~ /Can't locate $file/;
-    croak $@;
+    next if $error =~ /Can't locate $file/;
+    croak $error;
   }
 
   if ($command eq 'Help') {
@@ -124,8 +127,10 @@ sub run_directly {
   my ($class, $package) = @_;
 
   unless ($package->can('new')) {
-    eval "require $package";
-    croak $@ if $@;
+    my $error;
+    try   { eval "require $package" or die }
+    catch { $error = $_ || 'Obscure error' };
+    croak $error if $error;
   }
 
   my %global  = $class->get_options( $class->options );

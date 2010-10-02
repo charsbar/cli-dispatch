@@ -1,5 +1,8 @@
 Revision history for CLI-Dispatch
 
+0.11_01 2010/10/02
+  - use more Try::Tiny
+
 0.10 2010/09/29
   - no code changes
   - added Try::Tiny dependency, hoping to catch test errors correctly

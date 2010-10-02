@@ -9,6 +9,7 @@ use Pod::Simple::Text;
 use Path::Extended;
 use String::CamelCase;
 use Term::Encoding ();
+use Try::Tiny;
 
 my $term_encoding = Term::Encoding::get_encoding();
 
@@ -109,17 +110,19 @@ sub list_commands {
         # check availability
         if ( $pmfile->exists ) {
           Class::Unload->unload($class);
-          eval "require $class";
-          if ($@) {
+          my $error;
+          try   { eval "require $class" or die }
+          catch { $error = $_ || 'Obscure error' };
+          if ($error) {
             $found{$basename} .= " [disabled: compile error]";
           }
           elsif ( $class->can('check') ) {
-            eval { $class->check };
-            if ($@) {
-              my $error = $@;
+            try   { $class->check }
+            catch {
+              $error = $_ || 'Obscure error';
               $error =~ s/\s+at .+? line \d+\.?\s*$//;
               $found{$basename} .= " [disabled: $error]";
-            }
+            };
           }
         }
 
