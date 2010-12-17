@@ -12,7 +12,10 @@ use String::CamelCase;
 use Term::Encoding ();
 use Try::Tiny;
 
-my $term_encoding = Term::Encoding::get_encoding();
+my $term_encoding = eval {
+  find_encoding(Term::Encoding::get_encoding())
+} || 'utf8';
+
 
 sub options {qw( from|decode=s to|encode=s )}
 
