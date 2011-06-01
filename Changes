@@ -1,5 +1,8 @@
 Revision history for CLI-Dispatch
 
+0.13 2011/06/01
+  - use the first brief description found in the INC
+
 0.12 2010/12/19
   - production release; no code changes
 
