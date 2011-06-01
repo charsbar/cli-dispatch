@@ -109,7 +109,7 @@ sub list_commands {
 
         $basename = $self->convert_command($basename);
 
-        $found{$basename} = $self->extract_brief_description($pod, $class);
+        $found{$basename} ||= $self->extract_brief_description($pod, $class);
 
         # check availability
         if ( $pmfile->exists ) {
