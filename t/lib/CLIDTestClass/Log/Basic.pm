@@ -44,7 +44,7 @@ sub debug : Test(4) {
 sub logfilter : Test(4) {
   my $class = shift;
 
-  my $ret = $class->dispatch(qw/--logfilter=info,error/);
+  my $ret = $class->dispatch("--logfilter=info,error");
 
   unlike $ret => qr/\[debug\] debug/, $class->message("no debug log");
   like $ret => qr/\[info\] info/, $class->message("log info");
