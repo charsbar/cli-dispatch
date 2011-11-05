@@ -16,7 +16,10 @@ sub set_options {
 
   %{ $self } = @_;
 
-  $self->logger( $self->{verbose} ? 1 : 0 );
+  $self->logger( $self->{verbose} || $self->{debug} || $self->{logfilter} ? 1 : 0 );
+  my @filters = $self->{logfilter} ? split ',', $self->{logfilter} : ();
+  push @filters, '!debug' unless $self->{debug};
+  $self->logfilter(@filters);
 }
 
 sub options {}
@@ -84,6 +87,9 @@ CLI::Dispatch::Command
       die $self->usage(1) unless @args;
 
       # this message will be printed when "verbose" option is set
+      $self->log( info => 'going to convert encoding' );
+
+      # debug message will be printed only when "debug" option is set
       $self->log( debug => 'going to convert encoding' );
 
       my $decoded = decode( $self->option('from'), $args[0] );

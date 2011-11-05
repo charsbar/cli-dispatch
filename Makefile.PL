@@ -13,7 +13,7 @@ WriteMakefile(
     'Encode'              => 0,
     'File::Spec'          => 0,
     'Getopt::Long'        => 0,
-    'Log::Dump'           => 0,
+    'Log::Dump'           => '0.10',
     'Path::Extended'      => 0,
     'Pod::Simple'         => 0,
     'String::CamelCase'   => 0,

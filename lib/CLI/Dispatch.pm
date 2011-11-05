@@ -11,7 +11,7 @@ our $VERSION = '0.13';
 
 # you may want to override these three methods.
 
-sub options {qw( help|h|? verbose|v )}
+sub options {qw( help|h|? verbose|v debug logfilter=s )}
 
 sub default_command { 'help' }
 
