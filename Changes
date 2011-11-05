@@ -1,5 +1,8 @@
 Revision history for CLI-Dispatch
 
+0.14 2011/11/05
+  - finer log control with --debug and --logfilter options
+
 0.13 2011/06/01
   - use the first brief description found in the INC
 
