@@ -1,5 +1,8 @@
 Revision history for CLI-Dispatch
 
+0.15 2012/08/01
+  - Log::Dump is not loaded when you provide your own "log" method.
+
 0.14 2011/11/05
   - finer log control with --debug and --logfilter options
 
