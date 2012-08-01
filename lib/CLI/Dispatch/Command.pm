@@ -2,7 +2,6 @@ package CLI::Dispatch::Command;
 
 use strict;
 use warnings;
-use Log::Dump;
 
 sub new {
   my $class = shift;
@@ -16,10 +15,18 @@ sub set_options {
 
   %{ $self } = @_;
 
-  $self->logger( $self->{verbose} || $self->{debug} || $self->{logfilter} ? 1 : 0 );
-  my @filters = $self->{logfilter} ? split ',', $self->{logfilter} : ();
-  push @filters, '!debug' unless $self->{debug};
-  $self->logfilter(@filters);
+  if (!$self->can('log')) {
+    require Log::Dump; Log::Dump->import;
+  }
+
+  if ($self->can('logger')) {
+    $self->logger( $self->{verbose} || $self->{debug} || $self->{logfilter} ? 1 : 0 );
+  }
+  if ($self->can('logfilter')) {
+    my @filters = $self->{logfilter} ? split ',', $self->{logfilter} : ();
+    push @filters, '!debug' unless $self->{debug};
+    $self->logfilter(@filters);
+  }
 }
 
 sub options {}
@@ -145,10 +152,12 @@ and dumps them to stderr by default.
   $self->log( label => @messages );
 
 If you want to dump to a file, pass the file name to C<logfile>, and if you
-want to dump only messages with selected labels, use C<logfilter>. If you want
-to use other loggers like L<Log::Dispatch>, pass its instance to C<logger>.
+want to dump only messages with selected labels, use C<logfilter>.
 
 See L<Log::Dump> for detailed instrution.
+
+If you want to use other loggers, write your own C<log> method, and L<Log::Dump>
+will not be loaded (since 0.15).
 
 =head2 check (since 0.05)
 
