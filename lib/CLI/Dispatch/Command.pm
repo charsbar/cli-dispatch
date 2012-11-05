@@ -7,6 +7,11 @@ sub new {
   my $class = shift;
   my $self  = bless {}, $class;
   $self->set_options(@_) if @_;
+
+  if (!$self->can('log')) {
+    require Log::Dump; Log::Dump->import;
+  }
+
   $self;
 }
 
@@ -14,10 +19,6 @@ sub set_options {
   my $self = shift;
 
   %{ $self } = @_;
-
-  if (!$self->can('log')) {
-    require Log::Dump; Log::Dump->import;
-  }
 
   if ($self->can('logger')) {
     $self->logger( $self->{verbose} || $self->{debug} || $self->{logfilter} ? 1 : 0 );
