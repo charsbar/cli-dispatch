@@ -6,7 +6,7 @@ use warnings;
 sub new {
   my $class = shift;
   my $self  = bless {}, $class;
-
+  $self->set_options(@_) if @_;
   $self;
 }
 
@@ -189,7 +189,7 @@ loads L<CLI::Dispatch> to dispatch directly back to the command. This is handy i
 
 =head2 new
 
-creates a command object.
+creates a command object. It may take a hash of options.
 
 =head2 set_options
 
