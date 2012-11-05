@@ -28,6 +28,8 @@ sub set_options {
     push @filters, '!debug' unless $self->{debug};
     $self->logfilter(@filters);
   }
+
+  $self;
 }
 
 sub options {}
