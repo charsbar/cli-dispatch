@@ -16,14 +16,14 @@ sub options {qw( help|h|? verbose|v debug logfilter=s )}
 sub default_command { 'help' }
 
 sub get_command {
-  my $class = shift;
+  my $self = shift;
 
-  my $command = shift @ARGV || $class->default_command;
-  return $class->convert_command($command);
+  my $command = shift @ARGV || $self->default_command;
+  return $self->convert_command($command);
 }
 
 sub convert_command {
-  my ($class, $command) = @_;
+  my ($self, $command) = @_;
 
   $command = String::CamelCase::camelize( $command );
   $command =~ tr/a-zA-Z0-9_//cd;
@@ -32,8 +32,13 @@ sub convert_command {
 
 # you usually don't need to care below.
 
+sub new {
+  my ($class, %opts) = @_;
+  bless \%opts, $class;
+}
+
 sub get_options {
-  my ($class, @specs) = @_;
+  my ($self, @specs) = @_;
 
   my $parser = Getopt::Long::Parser->new(
     config => [qw( bundling ignore_case pass_through )]
@@ -45,21 +50,21 @@ sub get_options {
 }
 
 sub load_command {
-  my ($class, $namespaces, $help) = @_;
+  my ($self, $namespaces, $help) = @_;
 
-  my $command = $class->get_command;
+  my $command = $self->get_command;
 
   if ( $help ) {
     unshift @ARGV, $command;
     $command = 'Help';
   }
 
-  my $instance = $class->_load_command($namespaces, $command);
+  my $instance = $self->_load_command($namespaces, $command);
   return $instance if $instance;
 
   # fallback to help (maybe the command is just a pod)
   unshift @ARGV, $command;
-  $instance = $class->_load_command($namespaces, 'Help');
+  $instance = $self->_load_command($namespaces, 'Help');
   return $instance if $instance;
 
   # this shouldn't happen
@@ -70,7 +75,7 @@ sub load_command {
 }
 
 sub _load_command {
-  my ($class, $namespaces, $command) = @_;
+  my ($self, $namespaces, $command) = @_;
 
   foreach my $namespace (@$namespaces) {
     my $package = $namespace.'::'.$command;
@@ -102,20 +107,28 @@ sub _package_file {
 }
 
 sub run {
-  my ($class, @namespaces) = @_;
+  my ($self, @namespaces) = @_;
+
+  my $class;
+  unless ($class = ref $self) {
+    $class = $self;
+    $self = $self->new;
+  }
 
   if (!grep { $_ ne $class } @namespaces) {
     push @namespaces, $class;
   }
 
-  my %global  = $class->get_options( $class->options );
-  my $command = $class->load_command( \@namespaces, $global{help} );
-  my %local   = $class->get_options( $command->options );
+  my %global  = $self->get_options( $self->options );
+  my $command = $self->load_command( \@namespaces, $global{help} );
+  my %local   = $self->get_options( $command->options );
+
+  %$self = %global;
 
   $command->set_options( %global, %local, _namespaces => \@namespaces );
 
   if ( $command->isa('CLI::Dispatch::Help') and @ARGV ) {
-    $ARGV[0] = $class->convert_command($ARGV[0]);
+    $ARGV[0] = $self->convert_command($ARGV[0]);
   }
 
   $command->check if $command->can('check');
@@ -124,7 +137,7 @@ sub run {
 }
 
 sub run_directly {
-  my ($class, $package) = @_;
+  my ($self, $package) = @_;
 
   unless ($package->can('new')) {
     my $error;
@@ -133,14 +146,20 @@ sub run_directly {
     croak $error if $error;
   }
 
-  my %global  = $class->get_options( $class->options );
+  my $class;
+  unless ($class = ref $self) {
+    $class = $self;
+    $self = $self->new;
+  }
+
+  my %global  = $self->get_options( $self->options );
   my $command = $package->new;
   if ($global{help}) {
     require CLI::Dispatch::Help;
     $command = CLI::Dispatch::Help->new;
     unshift @ARGV, "+$package";
   }
-  my %local   = $class->get_options( $command->options );
+  my %local   = $self->get_options( $command->options );
 
   $command->set_options( %global, %local );
 
