@@ -123,9 +123,7 @@ sub run {
   my $command = $self->load_command( \@namespaces, $global{help} );
   my %local   = $self->get_options( $command->options );
 
-  %$self = %global;
-
-  $command->set_options( %global, %local, _namespaces => \@namespaces );
+  $command->set_options( %$self, %global, %local, _namespaces => \@namespaces );
 
   if ( $command->isa('CLI::Dispatch::Help') and @ARGV ) {
     $ARGV[0] = $self->convert_command($ARGV[0]);
