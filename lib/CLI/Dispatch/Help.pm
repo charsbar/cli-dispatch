@@ -81,6 +81,7 @@ sub list_commands {
   my @paths = map { s{::}{/}g; $_ } $self->_namespaces;
 
   my %found;
+  my %classes;
   my $maxlength = 0;
   foreach my $inc ( @INC ) {
     foreach my $path ( @paths ) {
@@ -97,6 +98,7 @@ sub list_commands {
 
         (my $class = $path) =~ s{/}{::}g;
         $class .= '::'.$basename;
+        $classes{$class} = 1;
 
         # ignore base class
         return if $class eq 'CLI::Dispatch::Command';
@@ -119,7 +121,14 @@ sub list_commands {
           try   { eval "require $class" or die }
           catch { $error = $_ || 'Obscure error' };
           if ($error) {
-            $found{$basename} .= " [disabled: compile error]";
+            if ($error =~ /^Can't locate /) {
+              # most probably this is a subcommand of some command
+              # (ie. in a wrong namespace)
+              delete $found{$basename};
+            }
+            else {
+              $found{$basename} .= " [disabled: compile error]";
+            }
           }
           elsif ( $class->can('check') ) {
             try   { $class->check }
