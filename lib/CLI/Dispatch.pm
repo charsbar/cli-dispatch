@@ -277,6 +277,56 @@ CLI::Dispatch - simple CLI dispatcher
 
     > perl inline.pl -v
 
+  * Using subcommands
+
+  In your script file (e.g. script.pl):
+
+    #!/usr/bin/perl
+    use strict;
+    use lib 'lib';
+    use CLI::Dispatch;
+    CLI::Dispatch->run('MyScript');
+
+  And in your "command" file (e.g. lib/MyScript/Command.pm):
+
+    package MyScript::Command;
+    use strict;
+    use CLI::Dispatch;
+    use base 'CLI::Dispatch::Command';
+
+    sub run {
+      my ($self, @args) = @_;
+
+      # create a dispatcher object configured with the same options
+      # as this command
+      my $dispatcher = CLI::Dispatch->new(%$self);
+
+      $dispatcher->run('MyScript::Command');
+    }
+
+    1;
+
+  And in your "subcommand" file (e.g. lib/MyScript/Command/Subcommand'):
+
+    package MyScript::Command::Subcommand;
+    use strict;
+    use base 'CLI::Dispatch::Command';
+
+    sub run {
+      my ($self, @args) = @_;
+
+      # do something useful
+    }
+
+    1;
+
+  From the shell:
+
+    > perl script.pl command subcommand "some args" --verbose
+
+    # will do something useful
+
+
 =head1 DESCRIPTION
 
 L<CLI::Dispatch> is a simple CLI dispatcher. Basic usage is almost the same as
@@ -350,6 +400,12 @@ options parsed from @ARGV. This is mainly used to run a command directly (withou
 configuring a dispatcher), which makes writing a simple command easier. You usually
 don't need to use this directly. This is called internally when you run a command
 (based on L<CLI::Dispatch::Command>) directly, without instantiation.
+
+=head2 new (since 0.17)
+
+creates a dispatcher object. You usually don't need to use this
+(because CLI::Dispatch creates this internally). If you need to copy
+options from a command to its subcommand, this may help.
 
 =head1 SEE ALSO
 
