@@ -1,5 +1,9 @@
 Revision history for CLI-Dispatch
 
+0.17 2013/02/05
+  - subcommand ("script.pl cmd subcmd args...") support, thanks to
+    Diab Jerius
+
 0.16 2012/11/06
   - ::Command->new now accepts a hash of options so that
     you can write ->new(%opts)->run(@args) .
