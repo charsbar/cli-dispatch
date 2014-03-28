@@ -7,7 +7,7 @@ use Class::Unload;
 use Class::Inspector;
 use Encode;
 use Pod::Simple::Text;
-use Path::Extended;
+use Path::Tiny;
 use String::CamelCase;
 use Term::Encoding ();
 use Try::Tiny;
@@ -85,29 +85,29 @@ sub list_commands {
   my $maxlength = 0;
   foreach my $inc ( @INC ) {
     foreach my $path ( @paths ) {
-      my $dir = dir( $inc, $path );
+      my $dir = path( $inc, $path );
       next unless $dir->exists;
-      $dir->recurse( callback => sub {
-        my $file = shift;
-        return if $file->is_dir;
+      my $iter = $dir->iterator({recurse => 1});
+      while (my $file = $iter->()) {
+        next if $file->is_dir;
 
         my $basename = $file->basename;
            $basename =~ s/\.(?:pm|pod)$//;
 
-        return if defined $found{$basename};
+        next if defined $found{$basename};
 
         (my $class = $path) =~ s{/}{::}g;
         $class .= '::'.$basename;
         $classes{$class} = 1;
 
         # ignore base class
-        return if $class eq 'CLI::Dispatch::Command';
+        next if $class eq 'CLI::Dispatch::Command';
 
-        my $podfile = $file->parent->file($basename . '.pod');
-        my $pmfile  = $file->parent->file($basename . '.pm');
+        my $podfile = $file->parent->child($basename . '.pod');
+        my $pmfile  = $file->parent->child($basename . '.pm');
 
         # should always parse .pod file if it exists
-        my $pod = $self->_parse_pod(scalar ($podfile->exists ? $podfile->slurp : $file->slurp));
+        my $pod = $self->_parse_pod($podfile->exists ? $podfile->slurp : $file->slurp);
 
         $basename = $self->convert_command($basename);
 
@@ -143,7 +143,7 @@ sub list_commands {
 
         my $len = length $basename;
         $maxlength = $len if $maxlength < $len;
-      });
+      }
     }
   }
 
@@ -205,8 +205,8 @@ sub _lookup {
   foreach my $inc ( @INC ) {
     foreach my $path ( @paths ) {
       foreach my $ext (qw( pod pm )) {
-        my $file = file( $inc, "$path.$ext" );
-        return scalar $file->slurp if $file->exists;
+        my $file = path( $inc, "$path.$ext" );
+        return $file->slurp if $file->exists;
       }
     }
   }
@@ -217,7 +217,7 @@ sub _lookup {
   while (my @caller = caller($ct++)) {
     next if $caller[0] =~ /^CLI::Dispatch(::.+)?$/;
     next if $seen{$caller[0]}++;
-    my $content = scalar file($caller[1])->slurp;
+    my $content = path($caller[1])->slurp;
     for my $path ( @paths ) {
       (my $package = $path) =~ s{/}{::}g;
       if ($content =~ /=head1\s+\S+\s+$package/s) { # hopefully NAME
