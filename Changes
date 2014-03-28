@@ -1,5 +1,8 @@
 Revision history for CLI-Dispatch
 
+0.18 2014/03/29
+  - switched to Path::Tiny internally
+
 0.17 2013/02/05
   - subcommand ("script.pl cmd subcmd args...") support, thanks to
     Diab Jerius
