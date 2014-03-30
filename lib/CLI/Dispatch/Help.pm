@@ -86,7 +86,7 @@ sub list_commands {
   foreach my $inc ( @INC ) {
     foreach my $path ( @paths ) {
       my $dir = path( $inc, $path );
-      next unless $dir->exists;
+      next unless $dir->exists && $dir->is_dir;
       my $iter = $dir->iterator({recurse => 1});
       while (my $file = $iter->()) {
         next if $file->is_dir;
