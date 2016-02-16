@@ -32,7 +32,7 @@ sub set_options {
   $self;
 }
 
-sub options {}
+sub options { return () }
 
 sub option {
   my ($self, $name) = @_;
