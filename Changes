@@ -1,5 +1,8 @@
 Revision history for CLI-Dispatch
 
+0.20 2016/02/17
+  - fixed an option spec error under perl 5.8.1
+
 0.19 2014/03/31
   - ::Help died if . was in the PATH (DJERIUS++)
 

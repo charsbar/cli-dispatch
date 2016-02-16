@@ -7,7 +7,7 @@ use Getopt::Long ();
 use String::CamelCase;
 use Try::Tiny;
 
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 
 # you may want to override these three methods.
 
