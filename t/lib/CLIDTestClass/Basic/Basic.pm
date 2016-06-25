@@ -30,6 +30,22 @@ sub simple_with_options : Test {
   ok $ret eq 'hello world', $class->message("dispatch succeeded: $ret");
 }
 
+sub simple_sub_new : Test {
+  my $class = shift;
+
+  my $ret = $class->dispatch(qw( sub_new ));
+
+  ok $ret eq '/var/tmp/', $class->message("dispatch succeeded: $ret");
+}
+
+sub simple_sub_new_with_options : Test {
+  my $class = shift;
+
+  my $ret = $class->dispatch(qw( sub_new_with_options --path=/tmp/));
+
+  ok $ret =~ /override path by a command argument/, $class->message("dispatch succeeded: $ret");
+}
+
 sub dispatch {
   my $class = shift;
 

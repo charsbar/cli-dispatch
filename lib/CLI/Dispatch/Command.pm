@@ -18,7 +18,11 @@ sub new {
 sub set_options {
   my $self = shift;
 
-  %{ $self } = @_;
+  my %args = @_;
+  for (keys %args) {
+      die "override $_ by a command argument" if defined $self->{$_};
+      $self->{$_} = $args{$_};
+  }
 
   if ($self->can('logger')) {
     $self->logger( $self->{verbose} || $self->{debug} || $self->{logfilter} ? 1 : 0 );
