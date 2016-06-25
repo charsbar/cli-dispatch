@@ -1,5 +1,9 @@
 Revision history for CLI-Dispatch
 
+0.21 2016/06/25
+  - Resolved #115600: Avoid to destroy some data of
+    a CLI::Dispatch::Command's child class (Yohei Yoshimuta++)
+
 0.20 2016/02/17
   - fixed an option spec error under perl 5.8.1
 
